@@ -19,7 +19,8 @@ class Game {
               currentBox = 1;
               if(digitToPlace < 9) digitToPlace++;
               else {
-                console.log('Success!');
+                endTime = performance.now();
+                console.log(`Success! Generation took ${((endTime-startTime)/1000).toFixed(1)} seconds.`);
                 _continue = false;
                 break;
               }
