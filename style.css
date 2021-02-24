@@ -1,22 +1,23 @@
 div#container {
   width: 456px;
-  height: 456px;
-  border: 2px inset #000;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.box {
-  width: 150px;
-  height: 150px;
+  height: 453px;
   border: 1px solid #000;
   display: flex;
   flex-wrap: wrap;
 }
 
+.box {
+  width: 148px;
+  height: 147px;
+  border: 2px solid #000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 .cell {
-  width: 48px;
-  height: 48px;
+  width: 47px;
+  height: 47px;
   border: 1px solid #000;
   text-align: center;
   line-height: 48px;
