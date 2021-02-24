@@ -1,17 +1,12 @@
 class Game {
   constructor() {
     this.placeRandomValues = () => {
+      let currentBox = 1, digitToPlace = 1, failureCount = 0, _continue = true;
       this.clearValues();
-      let currentBox = 1, failureCount = 0, _continue = true;
       let interval = setInterval(function() {
         let emptyCells = BOARD.boxes[currentBox-1].getEmptyCells();
-        let RAN1 = Math.floor(Math.random() * emptyCells.length) + 1;
-        let cell = emptyCells[RAN1-1];
-
-        let remainingOptions = BOARD.boxes[currentBox-1].getRemainingValues();
-        let RAN2 = Math.floor(Math.random() * remainingOptions.length) + 1;
-        let digitToPlace = remainingOptions[RAN2-1];
-
+        let RAN = Math.floor(Math.random() * emptyCells.length) + 1;
+        let cell = emptyCells[RAN-1];
         if( cell.value == undefined
         && !cell.box.containsValue(digitToPlace)
         && !cell.row.containsValue(digitToPlace)
@@ -20,19 +15,20 @@ class Game {
           cell.drawValue();
           failureCount = 0;
           if(currentBox < 9) currentBox++;
-          else if(BOARD.boxes[8].getEmptyCells().length === 0) {
-            console.log('success!');
-            _continue = false;
-          } else currentBox = 1;
+          else {
+            currentBox = 1;
+            if(digitToPlace < 9) digitToPlace++;
+            else _continue = false;
+          }
         } else failureCount++;
         if(!_continue) clearInterval(interval);
-        else if(failureCount > 250) {
+        else if(failureCount > 100) {
           console.log('failed');
           failureCount = 0;
           clearInterval(interval);
           BOARD.GAME.placeRandomValues();
         }
-      }, 1);
+      }, 5);
     };
 
     this.clearValues = () => {
@@ -89,12 +85,6 @@ class Box {
     };
 
     this.getEmptyCells = () => this.cells.filter((e) => e.value === undefined);
-
-    this.getRemainingValues = () => {
-      let a = [1,2,3,4,5,6,7,8,9];
-      for(let i = 0; i < 9; i++) if(this.cells[i].value != undefined) a.pop(a.indexOf(this.cells[i].value));
-      return a;
-    };
   }
 }
 
