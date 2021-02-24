@@ -18,12 +18,15 @@ class Game {
           else {
             currentBox = 1;
             if(digitToPlace < 9) digitToPlace++;
-            else _continue = false;
+            else {
+              console.log('Success!');
+              _continue = false;
+            }
           }
         } else failureCount++;
         if(!_continue) clearInterval(interval);
         else if(failureCount > 100) {
-          console.log('failed');
+          console.log('Failed');
           failureCount = 0;
           clearInterval(interval);
           BOARD.GAME.placeRandomValues();
