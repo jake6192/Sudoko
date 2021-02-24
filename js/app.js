@@ -4,30 +4,32 @@ class Game {
       let currentBox = 1, digitToPlace = 1, failureCount = 0, _continue = true;
       this.clearValues();
       let interval = setInterval(function() {
-        let emptyCells = BOARD.boxes[currentBox-1].getEmptyCells();
-        let RAN = Math.floor(Math.random() * emptyCells.length) + 1;
-        let cell = emptyCells[RAN-1];
-        if( cell.value == undefined
-        && !cell.box.containsValue(digitToPlace)
-        && !cell.row.containsValue(digitToPlace)
-        && !cell.column.containsValue(digitToPlace)) {
-          cell.value = digitToPlace;
-          cell.drawValue();
-          failureCount = 0;
-          if(currentBox < 9) currentBox++;
-          else {
-            currentBox = 1;
-            if(digitToPlace < 9) digitToPlace++;
+        let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
+        while(openCells.length > 0) {
+          let RAN = Math.floor(Math.random() * openCells.length) + 1;
+          let cell = openCells[RAN-1];
+          if( cell.value == undefined
+          && !cell.box.containsValue(digitToPlace)
+          && !cell.row.containsValue(digitToPlace)
+          && !cell.column.containsValue(digitToPlace)) {
+            cell.value = digitToPlace;
+            cell.drawValue();
+            if(currentBox < 9) currentBox++;
             else {
-              console.log('Success!');
-              _continue = false;
+              currentBox = 1;
+              if(digitToPlace < 9) digitToPlace++;
+              else {
+                console.log('Success!');
+                _continue = false;
+                break;
+              }
             }
-          }
-        } else failureCount++;
+            break; // Break out of while loop. //
+          } else openCells.splice(RAN-1, 1);
+        }
         if(!_continue) clearInterval(interval);
-        else if(failureCount > 50) {
+        if(openCells.length === 0 && BOARD.boxes[currentBox-2].getEmptyCells().length !== 0) {
           console.log('Failed');
-          failureCount = 0;
           clearInterval(interval);
           BOARD.GAME.placeRandomValues();
         }
