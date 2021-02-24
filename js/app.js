@@ -25,13 +25,13 @@ class Game {
           }
         } else failureCount++;
         if(!_continue) clearInterval(interval);
-        else if(failureCount > 100) {
+        else if(failureCount > 50) {
           console.log('Failed');
           failureCount = 0;
           clearInterval(interval);
           BOARD.GAME.placeRandomValues();
         }
-      }, 5);
+      }, 1);
     };
 
     this.clearValues = () => {
