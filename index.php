@@ -9,6 +9,9 @@
   </head>
   <body>
     <div id="container"></div>
+    <div class="info"></div>
+    <div class="btn" id="ran">Random Game</div>
+    <div class="btn" id="def">Defined Game</div>
 
     <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="js/app.js"></script>

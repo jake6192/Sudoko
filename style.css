@@ -23,3 +23,26 @@ div#container {
   font-size: 25px;
   font-weight: 600;
 }
+
+div.btn {
+  width: 98px;
+  height: 23px;
+  line-height: 23px;
+  border: 1px solid #000;
+  margin: 20px 170px;
+  padding: 0 10px;
+  border-radius: 2px;
+  text-align: center;
+}
+div.btn:hover { background-color: #ccc; cursor: pointer; }
+
+.info {
+  width: 350px;
+  height: 30px;
+  margin: 20px 50px;
+  line-height: 30px;
+  text-align: center;
+  background-color: #ddd;
+  border: 2px inset #aaa;
+  border-radius: 5px;
+}
