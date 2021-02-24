@@ -1,14 +1,17 @@
 div#container {
   width: 456px;
-  height: 453px;
-  border: 1px solid #000;
+  height: 456px;
+  padding: 5px;
+  border: 3px groove #777;
+  border-radius: 1%;
   display: flex;
   flex-wrap: wrap;
+  background-color: #ccc;
 }
 
 .box {
   width: 148px;
-  height: 147px;
+  height: 148px;
   border: 2px solid #000;
   display: flex;
   flex-wrap: wrap;
@@ -23,6 +26,7 @@ div#container {
   line-height: 47px;
   font-size: 25px;
   font-weight: 600;
+  background-color: #eee;
 }
 
 div.btn {
