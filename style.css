@@ -58,9 +58,10 @@ input#diff {
 }
 
 .info {
-  width: 350px;
+  width: fit-content;
   height: 30px;
-  margin: 20px 59px;
+  margin: 20px auto;
+  padding: 0 15px;
   line-height: 30px;
   text-align: center;
   background-color: #ddd;

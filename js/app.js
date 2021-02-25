@@ -39,7 +39,7 @@ class Game {
                 BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
                 BOARD.GAME.hideValues();
                 endTime = performance.now();
-                let str = `Success! Generation #${failureCount+1} took ${((endTime-startTime)/1000).toFixed(1)} seconds.`;
+                let str = `Success! Generation took ${((endTime-startTime)/1000).toFixed(1)} seconds and ${failureCount+1} attempts.`;
                 console.log(str);
                 $('.info').text(str);
                 _continue = !1;
@@ -56,7 +56,7 @@ class Game {
         if(!_continue) clearInterval(interval);
         if(openCells.length === 0 && BOARD.boxes[currentBox-2].getEmptyCells().length !== 0) {
           failureCount += 1;
-          let str = 'Order invalid. Retrying...';
+          let str = 'Pattern invalid. Retrying...';
           console.log(str);
           $('.info').text(`#${failureCount} - ${str}`);
           clearInterval(interval);
