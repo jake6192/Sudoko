@@ -17,7 +17,7 @@ class Game {
     };
 
     this.assignRandomValues = (fC, populatePDfList) => {
-      let currentBox = Math.floor(Math.random() * 9) + 1, digitToPlace = 1, failureCount = (fC ?? 0), _continue = !0;
+      let _R1 = Math.floor(Math.random() * 9) + 1, currentBox = _R1, digitToPlace = 1, failureCount = (fC ?? 0), _continue = !0;
       this.clearValues();
       let interval = setInterval(function() {
         let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
@@ -31,30 +31,34 @@ class Game {
             cell.value = digitToPlace;
             cell.valueIsHidden = !1;
             cell.drawValue();
-            if(currentBox < 9) currentBox++;
-            else {
+            if(currentBox < 9) {
+              currentBox++;
+              if(currentBox === _R1 && digitToPlace < 9) digitToPlace++;
+              else if(currentBox === _R1-1 && digitToPlace === 9) _continue = !1;
+            } else {
               currentBox = 1;
-              if(digitToPlace < 9) digitToPlace++;
-              else {
-                BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
-                BOARD.GAME.hideValues();
-                endTime = performance.now();
-                let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`;
-                console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline','');
-                $('.info').text(str.split('%c').join(''));
-                _continue = !1;
-                if(populatePDfList) {
-                  predefinedGames.push(BOARD.GAME.saveValuesToJSON());
-                  predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]);
-                  populatePDfList();
-                } break;
-              }
+              if(_R1 == 1 && digitToPlace < 9) digitToPlace++;
+              else if(digitToPlace === 9 && currentBox === _R1) _continue = !1;
             }
             break; // Break out of while loop. //
           } else openCells.splice(RAN-1, 1);
         }
-        if(!_continue) clearInterval(interval);
-        if(openCells.length === 0 && BOARD.boxes[currentBox-2].getEmptyCells().length !== 0) {
+        if(!_continue) {
+          BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
+          BOARD.GAME.hideValues();
+          clearInterval(interval);
+          endTime = performance.now();
+          let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`;
+          console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline','');
+          $('.info').text(str.split('%c').join(''));
+          _continue = !1;
+          if(populatePDfList) {
+            predefinedGames.push(BOARD.GAME.saveValuesToJSON());
+            predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]);
+            populatePDfList();
+          }
+        }
+        if(openCells.length === 0 && BOARD.boxes[currentBox-1].getEmptyCells().length !== 0) {
           failureCount += 1;
           let str = '%cPattern invalid.%c Retrying...';
           console.log(str, 'color:#f00;font-weight:600','font-weight:600');
