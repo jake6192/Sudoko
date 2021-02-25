@@ -112,7 +112,7 @@ class Board {
     this.rows    = [];
     this.columns = [];
     this.cells   = [];
-    this.SDArr   = [30,29,28,27,26,25,24,23,22,21];
+    this.SDArr   = [30,28,26,24,22,20,18,15,10,5];
     this.startingDigits;
 
     this.populateBoxes   = () => { for(let i = 0; i < 9; i++) this.boxes.push(new Box(i+1)); };
