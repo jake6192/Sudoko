@@ -17,7 +17,7 @@ class Game {
     };
 
     this.assignRandomValues = (fC, populatePDfList) => {
-      let currentBox = 1, digitToPlace = 1, failureCount = (fC ?? 0), _continue = !0;
+      let currentBox = Math.floor(Math.random() * 9) + 1, digitToPlace = 1, failureCount = (fC ?? 0), _continue = !0;
       this.clearValues();
       let interval = setInterval(function() {
         let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
@@ -39,9 +39,9 @@ class Game {
                 BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
                 BOARD.GAME.hideValues();
                 endTime = performance.now();
-                let str = `Success! Generation took ${((endTime-startTime)/1000).toFixed(1)} seconds and ${failureCount+1} attempts.`;
-                console.log(str);
-                $('.info').text(str);
+                let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`;
+                console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline','');
+                $('.info').text(str.split('%c').join(''));
                 _continue = !1;
                 if(populatePDfList) {
                   predefinedGames.push(BOARD.GAME.saveValuesToJSON());
@@ -56,9 +56,9 @@ class Game {
         if(!_continue) clearInterval(interval);
         if(openCells.length === 0 && BOARD.boxes[currentBox-2].getEmptyCells().length !== 0) {
           failureCount += 1;
-          let str = 'Pattern invalid. Retrying...';
-          console.log(str);
-          $('.info').text(`#${failureCount} - ${str}`);
+          let str = '%cPattern invalid.%c Retrying...';
+          console.log(str, 'color:#f00;font-weight:600','font-weight:600');
+          $('.info').text(`#${failureCount} - ${str.split('%c').join('')}`);
           clearInterval(interval);
           BOARD.GAME.assignRandomValues(failureCount, populatePDfList);
         }
