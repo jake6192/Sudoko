@@ -18,3 +18,9 @@ $('.btn').click((e) => {
   else if($(e.target).attr('id') === 'check') alert(BOARD.GAME.check() ? 'Correct!' : 'Keep Trying!');
   else startTime = undefined;
 });
+
+
+function populatePredefinedList() {
+  console.log(predefinedGames);
+  BOARD.GAME.assignRandomValues(null, function() { populatePredefinedList(); });
+}
