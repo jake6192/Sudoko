@@ -8,10 +8,10 @@ $(document).ready(() => {
     BOARD.populateCells();
     BOARD.drawBoard();
     BOARD.GAME = new Game();
-    refreshHighlightEventListener();
 });
 
 function addHighlight(e) {
+  removeHighlight();
   let _value = e.originalEvent.key;
   if((_value>0 && _value<=9) || (`${$(e.target).val()}`.length > 0)) try {
     let valuesToHighlight = (_value ?? $(e.target).val()), rowToHighlight = +$(e.target).attr('row'), columnToHighlight = +$(e.target).attr('column');
@@ -22,10 +22,14 @@ function addHighlight(e) {
   } catch(f) { console.log(f); }
 }
 function removeHighlight() { $('.highlight1, .highlight2, .highlight3').removeClass('highlight1').removeClass('highlight2').removeClass('highlight3'); }
-function toggleHighlight(e) { if(`${$(this).val()}`.length > 0) addHighlight(e); else removeHighlight(); }
+function toggleHighlight(e, dis) {
+  if((dis && `${$(e.target).val()}`.length > 0) || (!dis && `${$(this).val()}`.length > 0)) addHighlight(e);
+  else removeHighlight();
+}
 
 function refreshHighlightEventListener() {
-  $('input.cell').focus(addHighlight).blur(removeHighlight).keyup(toggleHighlight);
+  $($('input.cell').toArray().filter((x) => !$(x).attr('readonly'))).focus(addHighlight).blur(removeHighlight).keyup(toggleHighlight);
+  $($('input.cell').toArray().filter((x) =>  $(x).attr('readonly'))).mousedown((e) => { toggleHighlight(e, !0); });
 }
 
 $('.btn').click((e) => {

@@ -1,5 +1,7 @@
 body { margin: 50px calc(50% - 236px); }
 
+input[readonly] { color: #777; }
+
 div#container {
   width: 456px;
   height: 459px;

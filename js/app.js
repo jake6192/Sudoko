@@ -14,7 +14,7 @@ class Game {
       }
       BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
       BOARD.GAME.hideValues();
-      refreshHighlightEventListener();
+      setTimeout(function() { refreshHighlightEventListener(); }, 1500);
     };
 
     this.assignRandomValues = (fC, populatePDfList) => {
@@ -53,7 +53,7 @@ class Game {
           let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`;
           console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline','');
           $('.info').text(str.split('%c').join(''));
-          refreshHighlightEventListener();
+          setTimeout(function() { refreshHighlightEventListener(); }, 1500);
           if(populatePDfList) {
             predefinedGames.push(BOARD.GAME.saveValuesToJSON());
             predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]);
@@ -90,7 +90,7 @@ class Game {
     };
 
     this.clearValues = () => {
-      $('.cell').val('').attr('disabled', !0);
+      $('.cell').val('').attr('readonly', !0);
       for(let i = 0; i < 81; i++) {
         BOARD.cells[i].value = undefined;
         BOARD.cells[i].valueIsHidden = !1;
@@ -101,7 +101,7 @@ class Game {
       let interval = setInterval(function() {
         let RAN = Math.floor(Math.random() * 81) + 1, cell = BOARD.cells[RAN-1];
         if(cell.valueIsHidden && $(`.cell[cellid="${cell.cellID}"]`).val() === '') {
-          cell.showValue();
+          cell.showHint();
           clearInterval(interval);
         }
       }, 1);
@@ -140,7 +140,7 @@ class Board {
         $('#container').append(`<div class="box" boxID="${i+1}"></div>`);
         for(let j = 0; j < 9; j++) {
           let cell = this.boxes[i].cells[j];
-          $(`#container > .box[boxID="${i+1}"]`).append(`<input disabled type="text" class="cell" cellID="${cell.cellID}" row="${cell.row.rowNumber}" column="${cell.column.columnNumber}" />`);
+          $(`#container > .box[boxID="${i+1}"]`).append(`<input readonly type="text" class="cell" cellID="${cell.cellID}" row="${cell.row.rowNumber}" column="${cell.column.columnNumber}" />`);
         }
       }
     };
@@ -223,13 +223,14 @@ class Cell {
 
     this.drawValue = () => { $(`.cell[cellID="${this.cellID}"]`).val(`${this.value}`); };
 
-    this.showValue = () => {
-      $(`.cell[cellID="${this.cellID}"]`).val(this.value).attr('disabled', !0);
+    this.showHint = () => {
+      $(`.cell[cellID="${this.cellID}"]`).val(this.value).attr('readonly', !0);
       this.valueIsHidden = !1;
+      refreshHighlightEventListener();
     };
 
     this.hideValue = () => {
-      $(`.cell[cellID="${this.cellID}"]`).val('').removeAttr('disabled');
+      $(`.cell[cellID="${this.cellID}"]`).val('').removeAttr('readonly');
       this.valueIsHidden = !0;
     };
   }
