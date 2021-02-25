@@ -14,6 +14,7 @@ class Game {
       }
       BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
       BOARD.GAME.hideValues();
+      refreshHighlightEventListener();
     };
 
     this.assignRandomValues = (fC, populatePDfList) => {
@@ -52,7 +53,7 @@ class Game {
           let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`;
           console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline','');
           $('.info').text(str.split('%c').join(''));
-          _continue = !1;
+          refreshHighlightEventListener();
           if(populatePDfList) {
             predefinedGames.push(BOARD.GAME.saveValuesToJSON());
             predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]);
