@@ -1,6 +1,6 @@
 div#container {
   width: 456px;
-  height: 456px;
+  height: 459px;
   padding: 5px;
   border: 3px groove #777;
   border-radius: 1%;
@@ -11,7 +11,7 @@ div#container {
 
 .box {
   width: 148px;
-  height: 148px;
+  height: 149px;
   border: 2px solid #000;
   display: flex;
   flex-wrap: wrap;
@@ -19,8 +19,8 @@ div#container {
 }
 
 .cell {
-  width: 47px;
-  height: 47px;
+  width: 49px;
+  height: 50px;
   border: 1px solid #000;
   text-align: center;
   line-height: 47px;
@@ -34,17 +34,31 @@ div.btn {
   height: 23px;
   line-height: 23px;
   border: 1px solid #000;
-  margin: 20px 170px;
+  margin: 20px 176px;
   padding: 0 10px;
   border-radius: 2px;
   text-align: center;
 }
 div.btn:hover { background-color: #ccc; cursor: pointer; }
 
+div#difficulty {
+  margin: 20px 110px;
+  border: 1px solid #000;
+  width: 250px;
+  height: 30px;
+  text-align: center;
+}
+
+input#diff {
+  margin: 5px 0 0;
+  padding: 0;
+  line-height: 30px;
+}
+
 .info {
   width: 350px;
   height: 30px;
-  margin: 20px 50px;
+  margin: 20px 59px;
   line-height: 30px;
   text-align: center;
   background-color: #ddd;

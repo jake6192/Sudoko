@@ -22,13 +22,16 @@ class Game {
       for(var i = 0; i < 81; i++) {
         let cell = BOARD.cells[i];
         cell.value = predefinedGames[RAN][i];
+        cell.valueIsHidden = !1;
         cell.drawValue();
         $('.info').text(`Loaded game #${RAN+1}`);
       }
+      BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
+      BOARD.GAME.hideValues();
     };
 
     this.assignRandomValues = (fC) => {
-      let currentBox = 1, digitToPlace = 1, failureCount = (fC ?? 0), _continue = true;
+      let currentBox = 1, digitToPlace = 1, failureCount = (fC ?? 0), _continue = !0;
       this.clearValues();
       let interval = setInterval(function() {
         let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
@@ -40,17 +43,20 @@ class Game {
           && !cell.row.containsValue(digitToPlace)
           && !cell.column.containsValue(digitToPlace)) {
             cell.value = digitToPlace;
+            cell.valueIsHidden = !1;
             cell.drawValue();
             if(currentBox < 9) currentBox++;
             else {
               currentBox = 1;
               if(digitToPlace < 9) digitToPlace++;
               else {
+                BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
+                BOARD.GAME.hideValues();
                 endTime = performance.now();
                 let str = `Success! Generation took ${((endTime-startTime)/1000).toFixed(1)} seconds.`;
                 console.log(str);
                 $('.info').text(str);
-                _continue = false;
+                _continue = !1;
                 break;
               }
             }
@@ -69,16 +75,43 @@ class Game {
       }, 1);
     };
 
+    this.hideValues = () => {
+      for(let i = 0; i < (81-BOARD.startingDigits); i++) {
+        let interval = setInterval(function() {
+          let RAN = Math.floor(Math.random() * 81) + 1;
+          if(!BOARD.cells[RAN-1].valueIsHidden) {
+            BOARD.cells[RAN-1].hideValue();
+            clearInterval(interval);
+          }
+        }, 1);
+      }
+    };
+
     this.saveValuesToJSON = () => {
       let arr = [];
       for(var i = 0; i < 81; i++) arr.push(BOARD.cells[i].value);
-      console.log(arr);
+      return arr;
     };
 
     this.clearValues = () => {
-      $('.cell').text('');
-      for(let i = 0; i < 81; i++) BOARD.cells[i].value = undefined;
+      $('.cell').val('').attr('disabled', !0);
+      for(let i = 0; i < 81; i++) {
+        BOARD.cells[i].value = undefined;
+        BOARD.cells[i].valueIsHidden = !1;
+      }
     };
+
+    this.hint = () => {
+      let interval = setInterval(function() {
+        let RAN = Math.floor(Math.random() * 81) + 1, cell = BOARD.cells[RAN-1];
+        if(cell.valueIsHidden && $(`.cell[cellid="${cell.cellID}"]`).val() === '') {
+          cell.showValue();
+          clearInterval(interval);
+        }
+      }, 1);
+    };
+
+    this.check = () =>  ($('.cell').toArray().sort((a, b) => $(a).attr('cellid') - $(b).attr('cellid')).map((e) => +$(e).val()).toString() === BOARD.GAME.saveValuesToJSON().toString());
   }
 }
 
@@ -89,7 +122,8 @@ class Board {
     this.rows    = [];
     this.columns = [];
     this.cells   = [];
-    this.startingDigits = 10;
+    this.SDArr   = [30,29,28,27,26,25,24,23,22,21];
+    this.startingDigits;
 
     this.populateBoxes   = () => { for(let i = 0; i < 9; i++) this.boxes.push(new Box(i+1)); };
     this.populateRows    = () => { for(let i = 0; i < 9; i++) this.rows.push(new Row(i+1)); };
@@ -110,7 +144,7 @@ class Board {
         $('#container').append(`<div class="box" boxID="${i+1}"></div>`);
         for(let j = 0; j < 9; j++) {
           let cell = this.boxes[i].cells[j];
-          $(`#container > .box[boxID="${i+1}"]`).append(`<div class="cell" cellID="${cell.cellID}" row="${cell.row.rowNumber}" column="${cell.column.columnNumber}"></div>`);
+          $(`#container > .box[boxID="${i+1}"]`).append(`<input disabled type="text" class="cell" cellID="${cell.cellID}" row="${cell.row.rowNumber}" column="${cell.column.columnNumber}" />`);
         }
       }
     };
@@ -124,8 +158,8 @@ class Box {
     this.cells = [];
 
     this.containsValue = (value) => {
-      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return true;
-      return false;
+      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return !0;
+      return !1;
     };
 
     this.getEmptyCells = () => this.cells.filter((e) => e.value === undefined);
@@ -139,8 +173,8 @@ class Row {
     this.cells = [];
 
     this.containsValue = (value) => {
-      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return true;
-      return false;
+      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return !0;
+      return !1;
     };
   }
 }
@@ -153,8 +187,8 @@ class Column {
     this.cells = [];
 
     this.containsValue = (value) => {
-      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return true;
-      return false;
+      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return !0;
+      return !1;
     };
   }
 }
@@ -180,6 +214,16 @@ class Cell {
     else
       this.box = BOARD.boxes[(this.column.columnNumber<=3 ? 7 : (this.column.columnNumber<=6 ? 8 : 9))-1];
 
-    this.drawValue = () => { $(`.cell[cellID="${this.cellID}"]`).text(this.value); };
+    this.drawValue = () => { $(`.cell[cellID="${this.cellID}"]`).val(`${this.value}`); };
+
+    this.showValue = () => {
+      $(`.cell[cellID="${this.cellID}"]`).val(this.value).attr('disabled', !0);
+      this.valueIsHidden = !1;
+    };
+
+    this.hideValue = () => {
+      $(`.cell[cellID="${this.cellID}"]`).val('').removeAttr('disabled');
+      this.valueIsHidden = !0;
+    };
   }
 }
