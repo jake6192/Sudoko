@@ -39,7 +39,7 @@ class Game {
                 BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
                 BOARD.GAME.hideValues();
                 endTime = performance.now();
-                let str = `Success! Generation took ${((endTime-startTime)/1000).toFixed(1)} seconds.`;
+                let str = `Success! Generation #${failureCount+1} took ${((endTime-startTime)/1000).toFixed(1)} seconds.`;
                 console.log(str);
                 $('.info').text(str);
                 _continue = !1;
