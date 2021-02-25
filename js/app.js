@@ -44,6 +44,7 @@ class Game {
           } else openCells.splice(RAN-1, 1);
         }
         if(!_continue) {
+          BOARD.checkForUndefinedValues();
           BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
           BOARD.GAME.hideValues();
           clearInterval(interval);
@@ -142,6 +143,8 @@ class Board {
         }
       }
     };
+
+    this.checkForUndefinedValues = () => { for(let i = 0; i < 9; i++) this.boxes[i].checkForUndefinedValues(); };
   }
 }
 
@@ -157,6 +160,15 @@ class Box {
     };
 
     this.getEmptyCells = () => this.cells.filter((e) => e.value === undefined);
+
+    this.checkForUndefinedValues = () => {
+      for(let i = 0; i < 9; i++) {
+        if(this.cells[i].value === undefined) {
+          let x = arr_diff([1,2,3,4,5,6,7,8,9], this.cells.map((e) => e.value));
+          this.cells[i].value = +x[0];
+        }
+      }
+    };
   }
 }
 
