@@ -102,6 +102,7 @@ function toggleHighlight(e, dis) {
 
 function populatePredefinedList() {
   console.log(predefinedGames);
+  copy(predefinedGames);
   BOARD.GAME.assignRandomValues(null, function() { populatePredefinedList(); });
 }
 
