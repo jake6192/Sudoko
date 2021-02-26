@@ -2,12 +2,14 @@ const BOARD = new Board();
 let startTime, endTime;
 
 $(document).ready(() => {
-    BOARD.populateBoxes();
-    BOARD.populateRows();
-    BOARD.populateColumns();
-    BOARD.populateCells();
-    BOARD.drawBoard();
-    BOARD.GAME = new Game();
+  BOARD.populateBoxes();
+  BOARD.populateRows();
+  BOARD.populateColumns();
+  BOARD.populateCells();
+  BOARD.drawBoard();
+  BOARD.GAME = new Game();
+
+  $('#extraHighlight').attr('checked', false);
 });
 
 function addHighlight(e) {
@@ -15,10 +17,21 @@ function addHighlight(e) {
   let _value = e.originalEvent.key;
   if((_value>0 && _value<=9) || (`${$(e.target).val()}`.length > 0)) try {
     let valuesToHighlight = (_value ?? $(e.target).val()), rowToHighlight = +$(e.target).attr('row'), columnToHighlight = +$(e.target).attr('column');
-    $('.cell').toArray().filter((f) => +$(f).val() === +valuesToHighlight).map((f) => $(f).addClass('highlight3'));
+    let highlightExtraAreas = ($('#extraHighlight').is(':checked') === true), xRowsToHighlight = [], xColumnsToHighlight = [], xBoxesToHighlight = [];
+    $('.cell').toArray().filter((f) => +$(f).val() === +valuesToHighlight).map((f) => {
+      $(f).addClass('highlight3');
+      xRowsToHighlight.push(+$(f).attr('row'));
+      xColumnsToHighlight.push(+$(f).attr('column'));
+      xBoxesToHighlight.push(+$(f).parent().attr('boxid'));
+    });
     $(`.box[boxid="${$(e.target).parent().attr('boxid')}"] .cell`).addClass('highlight1');
     $(`.cell[row="${rowToHighlight}"]`).addClass('highlight2');
     $(`.cell[column="${columnToHighlight}"]`).addClass('highlight2');
+    if(highlightExtraAreas) {
+      xBoxesToHighlight.map((f) => $(`.box[boxid="${f}"] .cell`).addClass('highlight1'));
+      xRowsToHighlight.map((f) => $(`.cell[row="${f}"]`).addClass('highlight2'));
+      xColumnsToHighlight.map((f) => $(`.cell[column="${f}"]`).addClass('highlight2'));
+    }
   } catch(f) { console.log(f); }
 }
 function removeHighlight() { $('.highlight1, .highlight2, .highlight3').removeClass('highlight1').removeClass('highlight2').removeClass('highlight3'); }

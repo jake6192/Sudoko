@@ -16,6 +16,10 @@
       <label for="diff">Difficulty:&nbsp;</label>
       <input type="range" id="diff" name="diff" min="1" max="10" value="5" />
     </div>
+    <div id="xHghLght">
+      <label for="extraHighlight">Highlight Extra Areas:&nbsp;</label>
+      <input type="checkbox" id="extraHighlight" name="extraHighlight" />
+    </div>
     <div class="btn" id="hint">Hint</div>
     <div class="btn" id="check">Check</div>
 

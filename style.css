@@ -37,12 +37,24 @@ div#container {
 .cell.highlight2 { background-color: rgba(255,0,0,0.25); }
 .cell.highlight3 { background-color: rgba(255,0,0,0.50); }
 
+.info {
+  width: fit-content;
+  height: 30px;
+  margin: 20px auto;
+  padding: 0 15px;
+  line-height: 30px;
+  text-align: center;
+  background-color: #ddd;
+  border: 2px inset #aaa;
+  border-radius: 5px;
+}
+
 div.btn {
   width: 98px;
   height: 23px;
   line-height: 23px;
   border: 1px solid #000;
-  margin: 20px 176px;
+  margin: 20px auto;
   padding: 0 10px;
   border-radius: 2px;
   text-align: center;
@@ -50,7 +62,7 @@ div.btn {
 div.btn:hover { background-color: #ccc; cursor: pointer; }
 
 div#difficulty {
-  margin: 20px 110px;
+  margin: 20px auto;
   border: 1px solid #000;
   width: 250px;
   height: 30px;
@@ -63,14 +75,7 @@ input#diff {
   line-height: 30px;
 }
 
-.info {
+div#xHghLght {
   width: fit-content;
-  height: 30px;
-  margin: 20px auto;
-  padding: 0 15px;
-  line-height: 30px;
-  text-align: center;
-  background-color: #ddd;
-  border: 2px inset #aaa;
-  border-radius: 5px;
+  margin: 0 auto;
 }
