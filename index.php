@@ -11,10 +11,10 @@
     <div id="container"></div>
     <div class="info"></div>
     <div id="controlsContainer">
-      <div class="btn" id="ran">Random Game</div>
-      <div class="btn" id="def">Defined Game</div>
-      <div class="btn" id="note">Toggle Notes</div>
-      <div class="btn" id="hint">Hint</div>
+      <div class="btn" id="ran">Start Random Game</div>
+      <div class="btn" id="def">Start Defined Game</div>
+      <div class="btn" id="note">Toggle Cell Notes</div>
+      <div class="btn" id="hint">Show Hint</div>
     </div>
     <div id="difficulty">
       <label for="diff">Difficulty:&nbsp;</label>

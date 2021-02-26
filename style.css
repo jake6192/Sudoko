@@ -59,7 +59,7 @@ div#container {
 }
 
 div#controlsContainer {
-  width: 350px;
+  width: 400px;
   height: 71px;
   margin: 20px auto 0;
   display: flex;
@@ -68,7 +68,7 @@ div#controlsContainer {
 }
 
 div.btn {
-  width: 125px;
+  width: 150px;
   height: 23px;
   line-height: 23px;
   border: 1px solid #000;
