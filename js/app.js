@@ -140,7 +140,7 @@ class Board {
         $('#container').append(`<div class="box" boxID="${i+1}"></div>`);
         for(let j = 0; j < 9; j++) {
           let cell = this.boxes[i].cells[j];
-          $(`#container > .box[boxID="${i+1}"]`).append(`<input readonly type="text" class="cell" cellID="${cell.cellID}" row="${cell.row.rowNumber}" column="${cell.column.columnNumber}" />`);
+          $(`#container > .box[boxID="${i+1}"]`).append(`<div notes="" class="cellContainer"><input readonly type="text" class="cell" cellID="${cell.cellID}" row="${cell.row.rowNumber}" column="${cell.column.columnNumber}" /></div>`);
         }
       }
     };
