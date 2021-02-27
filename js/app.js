@@ -28,9 +28,9 @@ class Game {
           let RAN = Math.floor(Math.random() * openCells.length) + 1;
           let cell = openCells[RAN-1]; // Pick  random cell. //
           if( cell.value == undefined // Check JS obj if cell has value assigned. //
-          && !cell.box.containsValue(digitToPlace) // Check if the digit is already in the box. //
-          && !cell.row.containsValue(digitToPlace) // Check if the digit is already in the row. //
-          && !cell.column.containsValue(digitToPlace)) { // Check if the digit is already in the column. //
+          && !cell.box.containsValue(digitToPlace) // Check that the digit is not already in the box. //
+          && !cell.row.containsValue(digitToPlace) // Check that the digit is not already in the row. //
+          && !cell.column.containsValue(digitToPlace)) { // Check that the digit is not already in the column. //
             cell.value = digitToPlace; // Assign the value to the JS obj. //
             cell.valueIsHidden = !1; // Mark the cell as not hidden. //
             cell.drawValue();
