@@ -101,7 +101,7 @@ div.btn {
 }
 div.btn:hover  { background-color: #ccc; cursor: pointer; }
 div.btn.active { background-color: #f00; }
-div.btn.active:hover { background-color: #f22; }
+div.btn.active:hover { background-color: #b22; }
 .dark div.btn:hover  { background-color: #444 !important; }
 .dark div.btn.active { background-color: #b00 !important; }
 .dark div.btn.active:hover { background-color: #822 !important; }
