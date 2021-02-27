@@ -17,6 +17,7 @@ class Game {
       setTimeout(function() { refreshHighlightEventListener(); }, 1500);
     };
 
+    // Generate random boards until a valid game is found. //
     this.assignRandomValues = (fC, populatePDfList) => {
       let _R1 = Math.floor(Math.random() * 9) + 1, currentBox = _R1, // Randomly select one of the main 9 boxes. //
       digitToPlace = 1, failureCount = (fC ?? 0), _continue = !0;
