@@ -99,9 +99,12 @@ div.btn {
   background-color: #6d6d6d;
   color: #ddd;
 }
+div.btn:hover  { background-color: #ccc; cursor: pointer; }
 div.btn.active { background-color: #f00; }
-div.btn:hover { background-color: #ccc; cursor: pointer; }
 div.btn.active:hover { background-color: #f22; }
+.dark div.btn:hover  { background-color: #444 !important; }
+.dark div.btn.active { background-color: #b00 !important; }
+.dark div.btn.active:hover { background-color: #822 !important; }
 
 input#diff {
   margin: 5px 0 0;
