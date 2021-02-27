@@ -90,7 +90,7 @@ class Game {
     };
 
     this.clearValues = () => {
-      $('.cell').val('').attr('readonly', !0);
+      $('.cell').val('').attr('readonly', !0).parent().attr('notes', '');
       for(let i = 0; i < 81; i++) {
         BOARD.cells[i].value = undefined;
         BOARD.cells[i].valueIsHidden = !1;
