@@ -47,7 +47,7 @@ class Game {
             // If interval is back round to the starting box AND digitToPlace < 9, then start filling in the next value in sequence. //
             if(((currentBox <= 9 && currentBox === _R1) || (currentBox === 1 && _R1 === 1)) && digitToPlace < 9) digitToPlace++;
             else if(currentBox === _R1 && digitToPlace === 9) continueSearching = !1; // If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval. //
-            break; // Break out of while loop. //
+            break; // Break out of while loop now that this cell has been assigned a value. //
           } else openCells.splice(RAN-1, 1); // If random openCell is invalid, remove from list of options. //
         }
         /*************************************************************************************
