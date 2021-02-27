@@ -190,21 +190,14 @@ class Cell {
   constructor(cellID) {
     this.value;
     this.cellID = cellID;
-
     // Calculate Row. //
     this.row = BOARD.rows[Math.floor((this.cellID+8)/9)-1];
-
     // Calculate Column. //
     for(let i = 0, a = [9,8,7,6,5,4,3,2,1]; i < 9; i++)
       if((this.cellID+i)%9 === 0) this.column = BOARD.columns[a[i]-1];
-
     // Calculate Box. //
-    if(this.row.rowNumber <= 3)
-      this.box = BOARD.boxes[(this.column.columnNumber<=3 ? 1 : (this.column.columnNumber<=6 ? 2 : 3))-1];
-    else if(this.row.rowNumber <= 6)
-      this.box = BOARD.boxes[(this.column.columnNumber<=3 ? 4 : (this.column.columnNumber<=6 ? 5 : 6))-1];
-    else
-      this.box = BOARD.boxes[(this.column.columnNumber<=3 ? 7 : (this.column.columnNumber<=6 ? 8 : 9))-1];
+    let r3 = this.row.rowNumber > 3, r6 = this.row.rowNumber > 6, c3 = this.column.columnNumber > 3, c6 = this.column.columnNumber > 6;
+    this.box = BOARD.boxes[(c3 ? (c6 ? ( r3 ? ( r6 ? 9 : 6 ) : 3 ) : ( r3 ? ( r6 ? 8 : 5 ) : 2 )) : ( r3 ? (r6 ? 7 : 4) : 1 ))-1];
 
     this.drawValue = () => { $(`.cell[cellID="${this.cellID}"]`).val(`${this.value}`); };
 
