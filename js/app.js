@@ -30,7 +30,10 @@ class Game {
       *******************************************************************************************************************************************************/
       if(!BOARD.GAME.rGInterval) BOARD.GAME.rGInterval = setInterval(function() {
         let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
-        while(openCells.length > 0) { // While there are empty cells available to check in this box. //
+        /****************************************************************
+        // While there are empty cells available to check in this box. //
+        ****************************************************************/
+        while(openCells.length > 0) {
           let RAN = Math.floor(Math.random() * openCells.length) + 1, cell = openCells[RAN-1]; // Pick  random cell. //
           if( cell.value == undefined // Check JS obj if cell has value assigned. //
           && !cell.box.containsValue(digitToPlace) // Check that the digit is not already in the box. //
