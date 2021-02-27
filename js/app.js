@@ -2,7 +2,6 @@ const predefinedGames = [[1,2,3,4,6,5,9,8,7,9,5,4,3,8,7,2,1,6,8,6,7,2,1,9,3,4,5,
 
 class Game {
   constructor() {
-    this.interval;
     this.assignPredefinedValues = (gameNumber) => {
       this.clearValues();
       let RAN = (Math.floor(Math.random() * predefinedGames.length) + 1)-1;
@@ -21,6 +20,7 @@ class Game {
     /********************************************************
     // Generate random boards until a valid game is found. //
     ********************************************************/
+    this.rGInterval; // Game's random generator interval. //
     this.assignRandomValues = (fC, populatePDfList) => {
       let _R1 = Math.floor(Math.random() * 9) + 1, currentBox = _R1, // Randomly select one of the main 9 boxes. //
       digitToPlace = 1, failureCount = (fC ?? 0), continueSearching = !0;
@@ -28,7 +28,7 @@ class Game {
       /*******************************************************************************************************************************************************
       // Interval cycles through each of the 9 main boxes - sequentially trying to assign a digit to the box every 1ms, until board is complete or invalid. //
       *******************************************************************************************************************************************************/
-      if(!BOARD.GAME.interval) BOARD.GAME.interval = setInterval(function() {
+      if(!BOARD.GAME.rGInterval) BOARD.GAME.rGInterval = setInterval(function() {
         let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
         while(openCells.length > 0) { // While there are empty cells available to check in this box. //
           let RAN = Math.floor(Math.random() * openCells.length) + 1;
@@ -62,8 +62,8 @@ class Game {
           let str = '%cPattern invalid.%c Retrying...'; // String formatted for logging + style. //
           console.log(str, 'color:#f00;font-weight:600','font-weight:600'); // Log str with additional stylings. //
           $('.info').text(`#${failureCount} - ${str.split('%c').join('')}`); // Display str on page with format corrected. //
-          clearInterval(BOARD.GAME.interval);
-          BOARD.GAME.interval = null;
+          clearInterval(BOARD.GAME.rGInterval);
+          BOARD.GAME.rGInterval = null;
           BOARD.GAME.assignRandomValues(failureCount, populatePDfList); // Try again with a new random pattern. //
         } else if(!continueSearching) {
           /**********************************************
@@ -71,8 +71,8 @@ class Game {
           **********************************************/
           BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1]; // Number of cells to leave visible at start of game. //
           BOARD.GAME.hideValues(); // Hide all other cell values. //
-          clearInterval(BOARD.GAME.interval);
-          BOARD.GAME.interval = null;
+          clearInterval(BOARD.GAME.rGInterval);
+          BOARD.GAME.rGInterval = null;
           endTime = performance.now(); // Mark end time for successful game generation. //
           let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`; // String formatted for logging + style. //
           console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline',''); // Log str with addittional stylings. //
