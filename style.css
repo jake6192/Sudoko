@@ -2,7 +2,7 @@ body { margin: 50px calc(50% - 236px) 0; }
 body.dark { background-color: #2e2e2e; }
 
 input[readonly] { color: #777; }
-.dark input[readonly] { color: #bababa !important; }
+.dark input[readonly] { color: #a0a0a0 !important; }
 
 div#container {
   width: 456px;
