@@ -20,7 +20,7 @@ class Game {
     // Generate random boards until a valid game is found. //
     this.assignRandomValues = (fC, populatePDfList) => {
       let _R1 = Math.floor(Math.random() * 9) + 1, currentBox = _R1, // Randomly select one of the main 9 boxes. //
-      digitToPlace = 1, failureCount = (fC ?? 0), _continue = !0;
+      digitToPlace = 1, failureCount = (fC ?? 0), continueSearching = !0;
       this.clearValues(); // Clear the board. //
       // Interval cycles through each of the 9 main boxes ever 1ms until board is complete or invalid. //
       let interval = setInterval(function() {
@@ -38,18 +38,18 @@ class Game {
             if(currentBox < 9) {
               currentBox++;
               if(currentBox === _R1 && digitToPlace < 9) digitToPlace++; // If interval is back round to the starting box, start filling in the next value in sequence. //
-              else if(currentBox === _R1 && digitToPlace === 9) _continue = !1; /* If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval.
+              else if(currentBox === _R1 && digitToPlace === 9) continueSearching = !1; /* If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval.
               **-1  This method is used if the (random) starting box was not 1, as opposed to example **-2 below  */
             } else {
               currentBox = 1;
               if(_R1 == 1 && digitToPlace < 9) digitToPlace++; // If interval is back round to the starting box, start filling in the next value in sequence. //
-              else if(digitToPlace === 9 && currentBox === _R1) _continue = !1; /* If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval.
+              else if(digitToPlace === 9 && currentBox === _R1) continueSearching = !1; /* If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval.
               **-2  This method is used if the starting box was 1, as opposed to example **-1 above  */
             }
             break; // Break out of while loop. //
           } else openCells.splice(RAN-1, 1); // If random openCell is invalid, remove from list of options. //
         }
-        if(!_continue) { // If board has been successfully generated. //
+        if(!continueSearching) { // If board has been successfully generated. //
           BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1]; // Number of cells to leave visible at start of game. //
           BOARD.GAME.hideValues(); // Hide all other cell values. //
           clearInterval(interval);
