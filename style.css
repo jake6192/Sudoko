@@ -1,6 +1,8 @@
 body { margin: 50px calc(50% - 236px) 0; }
+body.dark { background-color: #2e2e2e; }
 
 input[readonly] { color: #777; }
+.dark input[readonly] { color: #bababa !important; }
 
 div#container {
   width: 456px;
@@ -12,6 +14,10 @@ div#container {
   flex-wrap: wrap;
   background-color: #ccc;
 }
+.dark div#container {
+  border-color: #b7b7b7 !important;
+  background-color: #636363 !important;
+}
 
 .box {
   width: 148px;
@@ -21,6 +27,7 @@ div#container {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+.dark .box { border-color: #ccc !important; }
 
 .cellContainer { position: relative; }
 .cellContainer::before {
@@ -30,6 +37,7 @@ div#container {
   left: 2.5px;
   font-size: 8pt;
 }
+.dark .cellContainer::before { color: #eee; }
 
 .cell {
   width: 49px;
@@ -41,6 +49,11 @@ div#container {
   font-weight: 600;
   background-color: #eee;
 }
+.dark .cell {
+  border-color: #ccc !important;
+  background-color: #262626;
+  color: #eee;
+}
 
 .cell.highlight1 { background-color: rgba(255,0,0,0.10); }
 .cell.highlight2 { background-color: rgba(255,0,0,0.25); }
@@ -49,13 +62,17 @@ div#container {
 .info {
   width: fit-content;
   height: 30px;
-  margin: 20px auto 0;
+  margin: 20px auto 20px;
   padding: 0 15px;
   line-height: 30px;
   text-align: center;
   background-color: #ddd;
   border: 2px inset #aaa;
   border-radius: 5px;
+}
+.dark .info {
+  background-color: #777 !important;
+  color: #ccc;
 }
 
 div#controlsContainer {
@@ -77,19 +94,14 @@ div.btn {
   border-radius: 3px;
   text-align: center;
 }
+.dark div.btn {
+  border-color: #c5c5c5 !important;
+  background-color: #6d6d6d;
+  color: #ddd;
+}
 div.btn.active { background-color: #f00; }
 div.btn:hover { background-color: #ccc; cursor: pointer; }
 div.btn.active:hover { background-color: #f22; }
-
-div#difficulty {
-  margin: 10px auto 0;
-  padding: 0 20px;
-  border: 1px solid #000;
-  border-radius: 5px;
-  width: fit-content;
-  height: 30px;
-  text-align: center;
-}
 
 input#diff {
   margin: 5px 0 0;
@@ -97,13 +109,19 @@ input#diff {
   line-height: 30px;
 }
 
-div#xHghLght {
+div#xHghLght { margin: 10px auto 40px !important; }
+div#xHghLght, div#difficulty, div#drkMde {
   width: fit-content;
-  margin: 10px auto 40px;
+  margin: 10px auto 0;
   padding: 0px 20px;
   border: 1px solid #000;
   border-radius: 5px;
   height: 30px;
   line-height: 30px;
   text-align: center;
+}
+.dark div#xHghLght, .dark div#difficulty, .dark div#drkMde {
+  border-color: #c5c5c5 !important;
+  background-color: #6d6d6d;
+  color: #ddd;
 }
