@@ -31,8 +31,7 @@ class Game {
       if(!BOARD.GAME.rGInterval) BOARD.GAME.rGInterval = setInterval(function() {
         let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
         while(openCells.length > 0) { // While there are empty cells available to check in this box. //
-          let RAN = Math.floor(Math.random() * openCells.length) + 1;
-          let cell = openCells[RAN-1]; // Pick  random cell. //
+          let RAN = Math.floor(Math.random() * openCells.length) + 1, cell = openCells[RAN-1]; // Pick  random cell. //
           if( cell.value == undefined // Check JS obj if cell has value assigned. //
           && !cell.box.containsValue(digitToPlace) // Check that the digit is not already in the box. //
           && !cell.row.containsValue(digitToPlace) // Check that the digit is not already in the row. //
@@ -40,17 +39,11 @@ class Game {
             cell.value = digitToPlace; // Assign the value to the JS obj. //
             cell.valueIsHidden = !1; // Mark the cell as not hidden. //
             cell.drawValue();
-            if(currentBox < 9) {
-              currentBox++;
-              if(currentBox === _R1 && digitToPlace < 9) digitToPlace++; // If interval is back round to the starting box, start filling in the next value in sequence. //
-              else if(currentBox === _R1 && digitToPlace === 9) continueSearching = !1; /* If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval.
-              **-1  This method is used if the (random) starting box was not 1, as opposed to example **-2 below  */
-            } else {
-              currentBox = 1;
-              if(_R1 == 1 && digitToPlace < 9) digitToPlace++; // If interval is back round to the starting box, start filling in the next value in sequence. //
-              else if(digitToPlace === 9 && currentBox === _R1) continueSearching = !1; /* If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval.
-              **-2  This method is used if the starting box was 1, as opposed to example **-1 above  */
-            }
+            if(currentBox < 9) currentBox++;
+            else currentBox = 1;
+            // If interval is back round to the starting box AND digitToPlace < 9, then start filling in the next value in sequence. //
+            if((currentBox <= 9 && currentBox === _R1 && digitToPlace < 9) || (currentBox === 1 && _R1 === 1 && digitToPlace < 9)) digitToPlace++;
+            else if(currentBox === _R1 && digitToPlace === 9) continueSearching = !1; // If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval. //
             break; // Break out of while loop. //
           } else openCells.splice(RAN-1, 1); // If random openCell is invalid, remove from list of options. //
         }
