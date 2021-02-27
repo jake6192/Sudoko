@@ -17,12 +17,16 @@ class Game {
       setTimeout(function() { refreshHighlightEventListener(); }, 1500);
     };
 
+    /********************************************************
     // Generate random boards until a valid game is found. //
+    ********************************************************/
     this.assignRandomValues = (fC, populatePDfList) => {
       let _R1 = Math.floor(Math.random() * 9) + 1, currentBox = _R1, // Randomly select one of the main 9 boxes. //
       digitToPlace = 1, failureCount = (fC ?? 0), continueSearching = !0;
       this.clearValues(); // Clear the board. //
-      // Interval cycles through each of the 9 main boxes ever 1ms until board is complete or invalid. //
+      /*******************************************************************************************************************************************************
+      // Interval cycles through each of the 9 main boxes - sequentially trying to assign a digit to the box every 1ms, until board is complete or invalid. //
+      *******************************************************************************************************************************************************/
       let interval = setInterval(function() {
         let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
         while(openCells.length > 0) { // While there are empty cells available to check in this box. //
@@ -49,30 +53,33 @@ class Game {
             break; // Break out of while loop. //
           } else openCells.splice(RAN-1, 1); // If random openCell is invalid, remove from list of options. //
         }
-        if(!continueSearching) { // If board has been successfully generated. //
+        /*************************************************************************************
+        // if currentBox has no more valid openCells AND the box before has missing values. //
+        *************************************************************************************/
+        if(continueSearching && openCells.length === 0 && BOARD.boxes[currentBox-1].getEmptyCells().length !== 0) {
+          failureCount += 1;
+          let str = '%cPattern invalid.%c Retrying...'; // String formatted for logging + style. //
+          console.log(str, 'color:#f00;font-weight:600','font-weight:600'); // Log str with additional stylings. //
+          $('.info').text(`#${failureCount} - ${str.split('%c').join('')}`); // Display str on page with format corrected. //
+          clearInterval(interval);
+          BOARD.GAME.assignRandomValues(failureCount, populatePDfList); // Try again with a new random pattern. //
+        } else if(!continueSearching) {
+          /**********************************************
+          // If board has been successfully generated. //
+          **********************************************/
           BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1]; // Number of cells to leave visible at start of game. //
           BOARD.GAME.hideValues(); // Hide all other cell values. //
           clearInterval(interval);
           endTime = performance.now(); // Mark end time for successful game generation. //
-          let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`;
-          console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline','');
-          $('.info').text(str.split('%c').join(''));
+          let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`; // String formatted for logging + style. //
+          console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline',''); // Log str with addittional stylings. //
+          $('.info').text(str.split('%c').join('')); // Display str on page with format corrected. //
           setTimeout(function() { refreshHighlightEventListener(); }, 1500); // Initialise the DOM event listeners now that the board has been loaded into the DOM. //
-          // populatePDfList - Development tool to generate random games to fill predefinedGames[[]] with. //
-          if(populatePDfList) {
+          if(populatePDfList) { // populatePDfList - Development tool to generate random games to fill predefinedGames[[]] with. //
             predefinedGames.push(BOARD.GAME.saveValuesToJSON());
             predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]); // Sort numerically by first 4 digits. //
             populatePDfList();
           }
-        }
-        // if ( currentBox has no more valid openCells && the box before has missing values ).  //
-        if(openCells.length === 0 && BOARD.boxes[currentBox-1].getEmptyCells().length !== 0) {
-          failureCount += 1;
-          let str = '%cPattern invalid.%c Retrying...';
-          console.log(str, 'color:#f00;font-weight:600','font-weight:600');
-          $('.info').text(`#${failureCount} - ${str.split('%c').join('')}`);
-          clearInterval(interval);
-          BOARD.GAME.assignRandomValues(failureCount, populatePDfList); // Try again with a new random pattern. //
         }
       }, 1);
     };
