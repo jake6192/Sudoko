@@ -10,10 +10,6 @@
   <body class="dark">
     <div id="container"></div>
     <div class="info"></div>
-    <div id="drkMde">
-      <label for="darkMode">Enable Dark Mode:&nbsp;</label>
-      <input checked type="checkbox" id="darkMode" name="darkMode" />
-    </div>
     <div id="controlsContainer">
       <div class="btn" id="ran">Start Random Game</div>
       <div class="btn" id="def">Start Defined Game</div>
@@ -27,6 +23,10 @@
     <div id="xHghLght">
       <label for="extraHighlight">Highlight Extra Areas:&nbsp;</label>
       <input type="checkbox" id="extraHighlight" name="extraHighlight" />
+    </div>
+    <div id="drkMde">
+      <label for="darkMode">Enable Dark Mode:&nbsp;</label>
+      <input checked type="checkbox" id="darkMode" name="darkMode" />
     </div>
     <div class="btn" id="check">Check If Correct</div>
 
