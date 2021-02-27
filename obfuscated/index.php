@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="/Sudoku/style.css">
     <title>Sudoko</title>
   </head>
-  <body>
+  <body class="dark">
     <div id="container"></div>
     <div class="info"></div>
+    <div id="drkMde">
+      <label for="darkMode">Enable Dark Mode:&nbsp;</label>
+      <input checked type="checkbox" id="darkMode" name="darkMode" />
+    </div>
     <div id="controlsContainer">
       <div class="btn" id="ran">Start Random Game</div>
       <div class="btn" id="def">Start Defined Game</div>
@@ -28,5 +32,8 @@
 
     <script type="text/javascript" src="/Sudoku/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="/Sudoku/main_app.js"></script>
+    <script type="text/javascript">
+      $('#darkMode').change((e) => $('body').toggleClass('dark'));
+    </script>
   </body>
 </html>
