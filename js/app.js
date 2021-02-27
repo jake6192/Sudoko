@@ -159,12 +159,8 @@ class Box {
     this.boxNumber = boxNumber;
     this.cells = [];
 
-    this.containsValue = (value) => {
-      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return !0;
-      return !1;
-    };
-
     this.getEmptyCells = () => this.cells.filter((e) => e.value === undefined);
+    this.containsValue = (value) => (this.cells.filter((e) => e.value === value).length > 0);
   }
 }
 
@@ -174,10 +170,7 @@ class Row {
     this.rowNumber = rowNumber;
     this.cells = [];
 
-    this.containsValue = (value) => {
-      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return !0;
-      return !1;
-    };
+    this.containsValue = (value) => (this.cells.filter((e) => e.value === value).length > 0);
   }
 }
 
@@ -188,10 +181,7 @@ class Column {
     this.columnNumber = columnNumber;
     this.cells = [];
 
-    this.containsValue = (value) => {
-      for(let i = 0; i < 9; i++) if(this.cells[i].value === value) return !0;
-      return !1;
-    };
+    this.containsValue = (value) => (this.cells.filter((e) => e.value === value).length > 0);
   }
 }
 
