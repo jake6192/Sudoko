@@ -76,7 +76,7 @@ class Game {
           setTimeout(function() { refreshHighlightEventListener(); }, 1500); // Initialise the DOM event listeners now that the board has been loaded into the DOM. //
           if(populatePDfList) { // populatePDfList - Development tool to generate random games to fill predefinedGames[[]] with. //
             predefinedGames.push(BOARD.GAME.saveValuesToJSON());
-            predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]); // Sort numerically by first 4 digits. //
+            predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]); // Sort numerically by first 4 digits in array. //
             populatePDfList();
           }
         }
