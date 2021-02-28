@@ -20,67 +20,29 @@ class Game {
     /********************************************************
     // Generate random boards until a valid game is found. //
     ********************************************************/
-    this.rGInterval; // Game's random generator interval. //
-    this.assignRandomValues = (fC, populatePDfList) => {
-      let _R1 = Math.floor(Math.random() * 9) + 1, currentBox = _R1, // Randomly select one of the main 9 boxes. //
-      digitToPlace = 1, failureCount = (fC ?? 0), continueSearching = !0;
-      this.clearValues(); // Clear the board. //
-      /*******************************************************************************************************************************************************
-      // Interval cycles through each of the 9 main boxes - sequentially trying to assign a digit to the box every 1ms, until board is complete or invalid. //
-      *******************************************************************************************************************************************************/
-      if(!BOARD.GAME.rGInterval) BOARD.GAME.rGInterval = setInterval(function() {
-        let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
-        /****************************************************************
-        // While there are empty cells available to check in this box. //
-        ****************************************************************/
-        while(openCells.length > 0) {
-          let RAN = Math.floor(Math.random() * openCells.length) + 1, cell = openCells[RAN-1]; // Pick  random cell. //
-          if( cell.value == undefined // Check JS obj if cell has value assigned. //
-          && !cell.box.containsValue(digitToPlace) // Check that the digit is not already in the box. //
-          && !cell.row.containsValue(digitToPlace) // Check that the digit is not already in the row. //
-          && !cell.column.containsValue(digitToPlace)) { // Check that the digit is not already in the column. //
-            cell.value = digitToPlace; // Assign the value to the JS obj. //
-            cell.valueIsHidden = !1; // Mark the cell as not hidden. //
-            cell.drawValue();
-            if(currentBox < 9) currentBox++;
-            else currentBox = 1;
-            // If interval is back round to the starting box AND digitToPlace < 9, then start filling in the next value in sequence. //
-            if(((currentBox <= 9 && currentBox === _R1) || (currentBox === 1 && _R1 === 1)) && digitToPlace < 9) digitToPlace++;
-            else if(currentBox === _R1 && digitToPlace === 9) continueSearching = !1; // If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval. //
-            break; // Break out of while loop now that this cell has been assigned a value. //
-          } else openCells.splice(RAN-1, 1); // If random openCell is invalid, remove from list of options. //
-        }
-        /*************************************************************************************
-        // if currentBox has no more valid openCells AND the box before has missing values. //
-        *************************************************************************************/
-        if(continueSearching && openCells.length === 0 && BOARD.boxes[currentBox-1].getEmptyCells().length !== 0) {
-          failureCount += 1;
-          let str = '%cPattern invalid.%c Retrying...'; // String formatted for logging + style. //
-          console.log(str, 'color:#f00;font-weight:600','font-weight:600'); // Log str with additional stylings. //
-          $('.info').text(`#${failureCount} - ${str.split('%c').join('')}`); // Display str on page with format corrected. //
-          clearInterval(BOARD.GAME.rGInterval);
-          BOARD.GAME.rGInterval = null;
-          BOARD.GAME.assignRandomValues(failureCount, populatePDfList); // Try again with a new random pattern. //
-        } else if(!continueSearching) {
-          /**********************************************
-          // If board has been successfully generated. //
-          **********************************************/
-          BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1]; // Number of cells to leave visible at start of game. //
-          BOARD.GAME.hideValues(); // Hide all other cell values. //
-          clearInterval(BOARD.GAME.rGInterval);
-          BOARD.GAME.rGInterval = null;
-          endTime = performance.now(); // Mark end time for successful game generation. //
-          let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`; // String formatted for logging + style. //
-          console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline',''); // Log str with addittional stylings. //
-          $('.info').text(str.split('%c').join('')); // Display str on page with format corrected. //
-          setTimeout(function() { refreshHighlightEventListener(); }, 1500); // Initialise the DOM event listeners now that the board has been loaded into the DOM. //
-          if(populatePDfList) { // populatePDfList - Development tool to generate random games to fill predefinedGames[[]] with. //
-            predefinedGames.push(BOARD.GAME.saveValuesToJSON());
-            predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]); // Sort numerically by first 4 digits in array. //
-            populatePDfList();
-          }
-        }
-      }, 1);
+    this.randomGenerator = new RandomGenerator();
+    this.assignRandomValues = (populatePDfList) => {
+      this.clearValues();
+      startTime = performance.now();
+      let values = this.randomGenerator.start();
+      for(var i = 0; i < 81; i++) {
+        let cell = BOARD.cells[i];
+        cell.value = values[i];
+        cell.valueIsHidden = !1;
+        cell.drawValue();
+      }
+      BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1];
+      BOARD.GAME.hideValues();
+      endTime = performance.now(); // Mark end time for successful game generation. //
+      let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(5)} seconds.`; // String formatted for logging + style. //
+      console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline'); // Log str with addittional stylings. //
+      $('.info').text(str.split('%c').join('')); // Display str on page with format corrected. //
+      setTimeout(function() { refreshHighlightEventListener(); }, 1500);
+      if(populatePDfList) { // populatePDfList - Development tool to generate random games to fill predefinedGames[[]] with. //
+        predefinedGames.push(BOARD.GAME.saveValuesToJSON());
+        predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]); // Sort numerically by first 4 digits in array. //
+        populatePDfList(((endTime-startTime)/1000).toFixed(5));
+      }
     };
 
     this.hideValues = () => {
@@ -216,6 +178,110 @@ class Cell {
     this.hideValue = () => {
       $(`.cell[cellID="${this.cellID}"]`).val('').removeAttr('readonly');
       this.valueIsHidden = !0;
+    };
+  }
+}
+
+
+
+class RandomGenerator {
+  constructor() {
+    this.cells = [];
+
+    this.makeRows = function(row) {
+      var puzzle = [];
+      for(let i = 0; i < row.length; i++) puzzle.push(row.slice());
+      return puzzle;
+    };
+
+    this.permuteRow = function(row, p) {
+      for(let i = 0; i < p; i++)
+        row.push(row.shift());
+      return row;
+    };
+
+    this.permutePuzzle = function(puzzle, perms) {
+      for(var i=0; i<perms.length; i++)
+        puzzle[i + 1] = this.permuteRow(puzzle[i + 1], perms[i]);
+      return puzzle;
+    };
+
+    this.linearSearch = function(array, item) {
+      for(var i = 0; i < array.length; i++)
+        if(array[i] == item)
+          return true;
+      return false;
+    };
+
+    this.checkColumn = function(puzzle, j) {
+      let x = puzzle.map(() => false);
+      for(let i = 0; i < puzzle.length; i++) x[i] = this.linearSearch(puzzle.map((e) => e[j-1]), i+1);
+      return x.filter((e) => e===false).length === 0;
+    };
+
+    this.colCheck = function(puzzle) {
+      for(let i = 0; i < puzzle.length; i++)
+        for(let j = 0; j < puzzle[i].length; j++) if(!this.checkColumn(puzzle, j+1)) return false;
+      return true;
+    };
+
+    this.makeGrid = function(puzzle, row1, row3, col1, col3) {
+      var array = [];
+      for (var i = row1; i <= row3; i++)
+        for (var j = col1; j <= col3; j++)
+          array.push(puzzle[i][j]);
+      return array;
+    };
+
+    this.checkGrid = function(puzzle, row1, row3, col1, col3) {
+      let x = puzzle.map(() => false), subgrid = this.makeGrid(puzzle, row1, row3, col1, col3);
+      for(let i = 0; i < subgrid.length; i++) x[i] = this.linearSearch(subgrid, i+1);
+      return x.filter((e) => e===false).length === 0;
+    };
+
+    this.checkGrids = function(puzzle) {
+      for(let i = 0; i < puzzle[0].length; i++){
+        let x;
+        switch(i) {
+          case 0: x = [0, 2, 0, 2]; break;
+          case 1: x = [0, 2, 3, 5]; break;
+          case 2: x = [0, 2, 6, 8]; break;
+          case 3: x = [3, 5, 0, 2]; break;
+          case 4: x = [3, 5, 3, 5]; break;
+          case 5: x = [3, 5, 6, 8]; break;
+          case 6: x = [6, 8, 0, 2]; break;
+          case 7: x = [6, 8, 3, 5]; break;
+          case 8: x = [6, 8, 6, 8]; break;
+        }
+        if(!this.checkGrid(puzzle, x[0], x[1], x[2], x[3])) return false;
+      }
+      return true;
+    };
+
+    this.makeSolution = function(row) {
+      let puzzle = this.permutePuzzle(this.makeRows(row), [3, 6, 5, 2, 8, 7, 4, 1]);
+      if(this.colCheck(puzzle) && this.checkGrids(puzzle)) return puzzle;
+      return false;
+    };
+
+    this.genPuzzle = (row) => this.makeSolution(row);
+
+    this.start = () => {
+      let startingRow = this.shuffle([1,2,3,4,5,6,7,8,9]);
+      this.genPuzzle(startingRow).map((e) => this.cells.push(...e));
+      return this.cells
+    };
+
+    this.shuffle = function(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+      while(0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
     };
   }
 }

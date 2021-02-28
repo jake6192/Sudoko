@@ -22,7 +22,6 @@ $(document).ready(() => {
 *********************/
 
 $('.btn').click((e) => {
-  startTime = performance.now();
   if($(e.target).attr('id') === 'note') toggleNotes();
   else if($(e.target).attr('id') === 'ran') BOARD.GAME.assignRandomValues();
   else if($(e.target).attr('id') === 'def') BOARD.GAME.assignPredefinedValues();
@@ -100,9 +99,17 @@ function toggleHighlight(e, dis) {
 ***   Development Tools   ***
 ****************************/
 
-function populatePredefinedList() {
-  console.log(predefinedGames);
-  BOARD.GAME.assignRandomValues(null, function() { populatePredefinedList(); });
+function populatePredefinedList(n, timeArr) {
+  if(!timeArr) timeArr = [];
+  if(n > 0) {
+    BOARD.GAME.assignRandomValues(function(time) {
+      timeArr.push(time);
+      populatePredefinedList(n-1, timeArr);
+    });
+  } else {
+    console.log(predefinedGames);
+    console.log(`%cAverage Generation Time: %c${((timeArr.reduce((a, b) => +a + +b, 0)/timeArr.length).toFixed(5) || 'Error')} seconds`, 'font-weight:600;','font-size:13px;text-decoration:underline');
+  }
 }
 
 function arr_diff(a1, a2) {
