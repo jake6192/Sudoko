@@ -11,8 +11,9 @@
     <div id="container"></div>
     <div class="info"></div>
     <div id="controlsContainer">
-      <div class="btn" id="ran">Start Random Game</div>
-      <div class="btn" id="def">Start Defined Game</div>
+      <div class="btn" id="ranEa">Start Random Easy Game</div>
+      <div class="btn" id="ranEx">Start Random Expert Game</div>
+      <div class="btn" id="def">Start Predefined Game</div>
       <div class="btn" id="note">Toggle Cell Notes</div>
       <div class="btn" id="hint">Show Hint</div>
     </div>

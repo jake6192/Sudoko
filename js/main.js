@@ -23,7 +23,8 @@ $(document).ready(() => {
 
 $('.btn').click((e) => {
   if($(e.target).attr('id') === 'note') toggleNotes();
-  else if($(e.target).attr('id') === 'ran') BOARD.GAME.assignRandomValues();
+  else if($(e.target).attr('id') === 'ranEa') BOARD.GAME.assignRandomValuesEa();
+  else if($(e.target).attr('id') === 'ranEx') BOARD.GAME.assignRandomValuesEx();
   else if($(e.target).attr('id') === 'def') BOARD.GAME.assignPredefinedValues();
   else if($(e.target).attr('id') === 'hint') BOARD.GAME.hint();
   else if($(e.target).attr('id') === 'check') alert(BOARD.GAME.check() ? 'Correct!' : 'Keep Trying!');
@@ -100,13 +101,15 @@ function toggleHighlight(e, dis) {
 ****************************/
 
 let _predefinedGames;
-function populatePredefinedList(n, timeArr) {
+function populatePredefinedList(n, timeArr, type) {
+  let func = function(time, _n) {
+    timeArr.push(time);
+    populatePredefinedList(_n ? n : n-1, timeArr);
+  };
   if(!timeArr) timeArr = [];
   if(n > 0) {
-    BOARD.GAME.assignRandomValues(function(time, _n) {
-      timeArr.push(time);
-      populatePredefinedList(_n ? n : n-1, timeArr);
-    });
+    if(type === 0) BOARD.GAME.assignRandomValuesEa(func);
+    else if(type === 1) BOARD.GAME.assignRandomValuesEx(null, func);
   } else {
     console.log(predefinedGames);
     $('#dev_pdgl').remove();

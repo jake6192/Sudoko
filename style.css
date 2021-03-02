@@ -76,18 +76,19 @@ div#container {
 }
 
 div#controlsContainer {
-  width: 400px;
-  height: 71px;
+  width: 472px;
+  height: 105px;
   margin: 20px auto 0;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  justify-content: center;
 }
 
 div.btn {
-  width: 150px;
-  height: 23px;
-  line-height: 23px;
+  width: 178px;
+  height: 21px;
+  line-height: 20px;
   border: 1px solid #000;
   margin: 0 auto 10px;
   padding: 0 10px;

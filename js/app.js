@@ -23,7 +23,7 @@ class Game {
     // Generate random boards until a valid game is found. //
     ********************************************************/
     this.randomGenerator = new RandomGenerator();
-    this.assignRandomValues = (populatePDfList) => {
+    this.assignRandomValuesEa = (populatePDfList) => {
       this.clearValues();
       startTime = performance.now();
       let values = this.randomGenerator.start();
@@ -47,6 +47,69 @@ class Game {
         predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]); // Sort numerically by first 4 digits in array. //
         populatePDfList(((endTime-startTime)/1000).toFixed(5), (len === predefinedGames.length));
       }
+    };
+
+    this.rGInterval; // Game's random generator interval. //
+    this.assignRandomValuesEx = (fC, populatePDfList) => {
+      let _R1 = Math.floor(Math.random() * 9) + 1, currentBox = _R1, // Randomly select one of the main 9 boxes. //
+      digitToPlace = 1, failureCount = (fC ?? 0), continueSearching = !0;
+      this.clearValues(); // Clear the board. //
+      /*******************************************************************************************************************************************************
+      // Interval cycles through each of the 9 main boxes - sequentially trying to assign a digit to the box every 1ms, until board is complete or invalid. //
+      *******************************************************************************************************************************************************/
+      if(!BOARD.GAME.rGInterval) BOARD.GAME.rGInterval = setInterval(function() {
+        let openCells = BOARD.boxes[currentBox-1].getEmptyCells();
+        /****************************************************************
+        // While there are empty cells available to check in this box. //
+        ****************************************************************/
+        while(openCells.length > 0) {
+          let RAN = Math.floor(Math.random() * openCells.length) + 1, cell = openCells[RAN-1]; // Pick  random cell. //
+          if( cell.value == undefined // Check JS obj if cell has value assigned. //
+          && !cell.box.containsValue(digitToPlace) // Check that the digit is not already in the box. //
+          && !cell.row.containsValue(digitToPlace) // Check that the digit is not already in the row. //
+          && !cell.column.containsValue(digitToPlace)) { // Check that the digit is not already in the column. //
+            cell.value = digitToPlace; // Assign the value to the JS obj. //
+            cell.valueIsHidden = !1; // Mark the cell as not hidden. //
+            cell.drawValue();
+            if(currentBox < 9) currentBox++;
+            else currentBox = 1;
+            // If interval is back round to the starting box AND digitToPlace < 9, then start filling in the next value in sequence. //
+            if(((currentBox <= 9 && currentBox === _R1) || (currentBox === 1 && _R1 === 1)) && digitToPlace < 9) digitToPlace++;
+            else if(currentBox === _R1 && digitToPlace === 9) continueSearching = !1; // If interval has just assigned a value to the last box and the value was 9, change variable to stop the interval. //
+            break; // Break out of while loop now that this cell has been assigned a value. //
+          } else openCells.splice(RAN-1, 1); // If random openCell is invalid, remove from list of options. //
+        }
+        /*************************************************************************************
+        // if currentBox has no more valid openCells AND the box before has missing values. //
+        *************************************************************************************/
+        if(continueSearching && openCells.length === 0 && BOARD.boxes[currentBox-1].getEmptyCells().length !== 0) {
+          failureCount += 1;
+          let str = '%cPattern invalid.%c Retrying...'; // String formatted for logging + style. //
+          console.log(str, 'color:#f00;font-weight:600','font-weight:600'); // Log str with additional stylings. //
+          $('.info').text(`#${failureCount} - ${str.split('%c').join('')}`); // Display str on page with format corrected. //
+          clearInterval(BOARD.GAME.rGInterval);
+          BOARD.GAME.rGInterval = null;
+          BOARD.GAME.assignRandomValuesEx(failureCount, populatePDfList); // Try again with a new random pattern. //
+        } else if(!continueSearching) {
+          /**********************************************
+          // If board has been successfully generated. //
+          **********************************************/
+          BOARD.startingDigits = BOARD.SDArr[$('input[type="range"]').val()-1]; // Number of cells to leave visible at start of game. //
+          BOARD.GAME.hideValues(); // Hide all other cell values. //
+          clearInterval(BOARD.GAME.rGInterval);
+          BOARD.GAME.rGInterval = null;
+          endTime = performance.now(); // Mark end time for successful game generation. //
+          let str = `%cSuccess! %cGeneration took %c${((endTime-startTime)/1000).toFixed(1)} seconds%c and %c${failureCount+1} attempts%c.`; // String formatted for logging + style. //
+          console.log(str, 'color:#0f0;font-weight:600','','font-size:13px;text-decoration:underline','','font-size:13px;text-decoration:underline',''); // Log str with addittional stylings. //
+          $('.info').text(str.split('%c').join('')); // Display str on page with format corrected. //
+          setTimeout(function() { refreshHighlightEventListener(); }, 1500); // Initialise the DOM event listeners now that the board has been loaded into the DOM. //
+          if(populatePDfList) { // populatePDfList - Development tool to generate random games to fill predefinedGames[[]] with. //
+            predefinedGames.push(BOARD.GAME.saveValuesToJSON());
+            predefinedGames.sort((a, b) => a[0]-b[0]===0?a[1]-b[1]===0?a[2]-b[2]===0?a[3]-b[3]:a[2]-b[2]:a[1]-b[1]:a[0]-b[0]); // Sort numerically by first 4 digits in array. //
+            populatePDfList();
+          }
+        }
+      }, 1);
     };
 
     this.hideValues = () => {
@@ -96,7 +159,7 @@ class Board {
     this.rows    = [];
     this.columns = [];
     this.cells   = [];
-    this.SDArr   = [30,28,26,24,22,20,18,15,10,5];
+    this.SDArr   = [81,28,26,24,22,20,18,15,10,5];
     this.startingDigits;
 
     this.populateBoxes   = () => { for(let i = 0; i < 9; i++) this.boxes.push(new Box(i+1)); };
