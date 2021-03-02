@@ -32,7 +32,7 @@
     <div class="btn" id="check">Check If Correct</div>
 
     <script type="text/javascript" src="/Sudoku/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="/Sudoku/main_app.js"></script>
+    <script type="text/javascript" src="/Sudoku/main_app.min.js"></script>
     <script type="text/javascript">
       $('#darkMode').change((e) => $('body').toggleClass('dark'));
     </script>
