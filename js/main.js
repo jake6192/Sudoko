@@ -99,18 +99,33 @@ function toggleHighlight(e, dis) {
 ***   Development Tools   ***
 ****************************/
 
+let _predefinedGames;
 function populatePredefinedList(n, timeArr) {
   if(!timeArr) timeArr = [];
   if(n > 0) {
-    BOARD.GAME.assignRandomValues(function(time) {
+    BOARD.GAME.assignRandomValues(function(time, _n) {
       timeArr.push(time);
-      populatePredefinedList(n-1, timeArr);
+      populatePredefinedList(_n ? n : n-1, timeArr);
     });
   } else {
     console.log(predefinedGames);
+    $('#dev_pdgl').remove();
+    $('body').append(`<script id="dev_pdgl">_predefinedGames = [${predefinedGames}];</script>`);
     console.log(`%cAverage Generation Time: %c${((timeArr.reduce((a, b) => +a + +b, 0)/timeArr.length).toFixed(5) || 'Error')} seconds`, 'font-weight:600;','font-size:13px;text-decoration:underline');
   }
 }
+
+function arr_shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  while(0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+};
 
 function arr_diff(a1, a2) {
   let a = [], diff = [];
